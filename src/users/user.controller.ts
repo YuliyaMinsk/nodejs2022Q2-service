@@ -1,6 +1,7 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, Post } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserService } from './user.service';
+import User from './user.entity';
 
 // @HttpCode(400)
 // @HttpCode(403)
@@ -16,8 +17,8 @@ export class UserController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): string {
-    return `This action returns a #${id} user`;
+  findOne(@Param('id') id: string): User {
+    return this.userService.findOne(id);
   }
 
   @Post()
@@ -26,7 +27,8 @@ export class UserController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return `This action removes a #${id} cat`;
+  @HttpCode(204)
+  delete(@Param('id') id: string) {
+    return this.userService.delete(id);
   }
 }

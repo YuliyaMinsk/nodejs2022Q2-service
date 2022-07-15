@@ -1,5 +1,5 @@
-import { Injectable } from '@nestjs/common';
-import { v4 } from 'uuid';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { v4, validate } from 'uuid';
 import { CreateUserDto } from './dto/create-user.dto';
 import InMemoryDB from 'src/in-memory.db';
 import User from './user.entity';
@@ -29,7 +29,36 @@ export class UserService {
   }
 
   findAll(): User[] {
-    console.log(this.inMemoryDB);
     return this.inMemoryDB.users;
+  }
+
+  findOne(id: string): User {
+    const user = this.inMemoryDB.users.find((user) => user.id === id)
+
+    if (!validate(id)) {
+      throw new BadRequestException();
+    }
+
+    if (!user) {
+      throw new NotFoundException();
+    }
+
+    return user || null;
+  }
+
+  delete(id: string) {
+    const userToDelete = this.findOne(id);
+
+    if (!userToDelete) {
+      throw new NotFoundException();
+    }
+
+    const index = this.inMemoryDB.users.findIndex((user) => {
+      return user.id === userToDelete.id;
+    });
+
+    this.inMemoryDB.users.splice(index, 1);
+
+    return userToDelete || null;
   }
 }
