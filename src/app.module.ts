@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import InMemoryDB from './in-memory.db';
 import { UserController } from './users/user.controller';
 import { UserService } from './users/user.service';
 
@@ -6,5 +7,6 @@ import { UserService } from './users/user.service';
   imports: [],
   controllers: [UserController],
   providers: [UserService],
+  exports: [],
 })
 export class AppModule {}

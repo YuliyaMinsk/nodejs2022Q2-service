@@ -1,15 +1,35 @@
 import { Injectable } from '@nestjs/common';
-import User from './user.interface';
+import { v4 } from 'uuid';
+import { CreateUserDto } from './dto/create-user.dto';
+import InMemoryDB from 'src/in-memory.db';
+import User from './user.entity';
 
 @Injectable()
 export class UserService {
-  private readonly cats: User[] = [];
+  private readonly inMemoryDB: InMemoryDB;
 
-  create(cat: User) {
-    this.cats.push(cat);
+  constructor() {
+    this.inMemoryDB = new InMemoryDB();
+  }  
+
+  create(createUserDto: CreateUserDto) {
+
+    const newUser = new User();
+
+    newUser.id = v4();
+    newUser.login = createUserDto.login;
+    newUser.password = createUserDto.password;
+    newUser.version = 1;
+    newUser.createdAt = Date.now();
+    newUser.updatedAt = Date.now();
+
+    this.inMemoryDB.users.push(newUser);
+
+    return newUser;
   }
 
   findAll(): User[] {
-    return this.cats;
+    console.log(this.inMemoryDB);
+    return this.inMemoryDB.users;
   }
 }

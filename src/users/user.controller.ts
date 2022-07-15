@@ -1,5 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
+import { UserService } from './user.service';
 
 // @HttpCode(400)
 // @HttpCode(403)
@@ -7,9 +8,11 @@ import { CreateUserDto } from './dto/create-user.dto';
 
 @Controller('user')
 export class UserController {
+  constructor(private userService: UserService) {}
+
   @Get()
-  findAll(): string {
-    return 'This action returns all users';
+  findAll() {
+    return this.userService.findAll();
   }
 
   @Get(':id')
@@ -18,8 +21,8 @@ export class UserController {
   }
 
   @Post()
-  async create(@Body() createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  create(@Body() createUserDto: CreateUserDto) {
+    return this.userService.create(createUserDto);
   }
 
   @Delete(':id')
