@@ -1,24 +1,24 @@
 import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { v4, validate } from 'uuid';
 import { CreateUserDto } from './dto/create-user.dto';
-import InMemoryDB from 'src/in-memory.db';
+import inMemoryDB from 'src/in-memory.db';
 import User from './user.entity';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 
 @Injectable()
 export class UserService {
-  private readonly inMemoryDB: InMemoryDB;
+  private readonly users: User[];
 
   constructor() {
-    this.inMemoryDB = new InMemoryDB();
+    this.users = inMemoryDB.users;
   }    
 
   findAll(): User[] {
-    return this.inMemoryDB.users;
+    return this.users;
   }
 
   findOne(id: string): User {
-    const user = this.inMemoryDB.users.find((user) => user.id === id)
+    const user = this.users.find((user) => user.id === id)
 
     if (!validate(id)) {
       throw new BadRequestException();
@@ -42,7 +42,7 @@ export class UserService {
     newUser.createdAt = Date.now();
     newUser.updatedAt = Date.now();
 
-    this.inMemoryDB.users.push(newUser);
+    this.users.push(newUser);
 
     return newUser;
   }
@@ -80,11 +80,11 @@ export class UserService {
       throw new NotFoundException();
     }
 
-    const index = this.inMemoryDB.users.findIndex((user) => {
+    const index = this.users.findIndex((user) => {
       return user.id === userToDelete.id;
     });
 
-    this.inMemoryDB.users.splice(index, 1);
+    this.users.splice(index, 1);
 
     return userToDelete || null;
   }
