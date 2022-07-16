@@ -1,11 +1,8 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Post } from '@nestjs/common';
+import { Body, ClassSerializerInterceptor, Controller, Delete, Get, HttpCode, Param, Post, Put, UseInterceptors } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserService } from './user.service';
 import User from './user.entity';
-
-// @HttpCode(400)
-// @HttpCode(403)
-// @HttpCode(404)
+import { UpdatePasswordDto } from './dto/update-password.dto';
 
 @Controller('user')
 export class UserController {
@@ -24,6 +21,11 @@ export class UserController {
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
+  }
+
+  @Put(':id')
+  updatePassword(@Param('id') id: string, @Body() UpdatePasswordDto: UpdatePasswordDto) {
+    return this.userService.updatePassword(id, UpdatePasswordDto);
   }
 
   @Delete(':id')
