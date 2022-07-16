@@ -10,7 +10,7 @@ class Database {
   users: User[] = [];
   artists: Artist[] = [];
   tracks: Track[] = [];
-  album: Album[] = [];
+  albums: Album[] = [];
   favorites: Favorites[] = [];
 }
 
