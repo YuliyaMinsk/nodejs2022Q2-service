@@ -13,7 +13,7 @@ import { UpdateFavoriteDto } from './dto/update-favorite.dto';
 import { FavoriteService } from './favorite.service';
 import Favorites from './favorite.entity';
 
-@Controller('favorite')
+@Controller('favs')
 export class FavoriteController {
   constructor(private favoriteService: FavoriteService) {}
 
@@ -22,25 +22,15 @@ export class FavoriteController {
     return this.favoriteService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    //return this.favoriteService.findOne(id);
+  @Post('album/:id')
+  @HttpCode(201)
+  addAlbum(@Param('id') id: string) {
+    return this.favoriteService.addAlbum(id);
   }
 
-  @Put()
-  addAlbum(@Body() createFavoriteDto: CreateFavoriteDto) {
-    //return this.favoriteService.add(createFavoriteDto);
-  }
-
-  @Put()
-  removeAlbum(@Body() createFavoriteDto: CreateFavoriteDto) {
-    //return this.favoriteService.remove(createFavoriteDto);
-  }
-
-
-  @Delete(':id')
+  @Delete('album/:id')
   @HttpCode(204)
-  delete(@Param('id') id: string) {
-    return this.favoriteService.delete(id);
+  removeAlbum(@Param('id') id: string) {
+    return this.favoriteService.removeAlbum(id);
   }
 }
