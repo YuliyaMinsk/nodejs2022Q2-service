@@ -14,7 +14,7 @@ import DatabaseService from 'src/db/in-memory.db.service';
 export class UserService {
   private readonly users: User[];
 
-  constructor(private db: DatabaseService<User>,) {}
+  constructor(private db: DatabaseService<User>) {}
 
   findAll(): User[] {
     return this.db.findAll();
@@ -49,14 +49,14 @@ export class UserService {
     return newUser;
   }
 
-  updatePassword(id: string, UpdatePasswordDto: UpdatePasswordDto) {
+  updatePassword(id: string, updatePasswordDto: UpdatePasswordDto) {
     const userToUpdate = this.findOne(id);
 
     if (!userToUpdate) {
       throw new NotFoundException();
     }
 
-    const { oldPassword, newPassword } = UpdatePasswordDto;
+    const { oldPassword, newPassword } = updatePasswordDto;
 
     if (oldPassword === newPassword) {
       throw new BadRequestException();

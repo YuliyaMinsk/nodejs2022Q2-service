@@ -11,7 +11,7 @@ import { UpdateTrackDto } from './dto/update-track.dto';
 
 @Injectable()
 export class TrackService {
-  constructor(private db: DatabaseService<Track>,) {}
+  constructor(private db: DatabaseService<Track>) {}
 
   findAll(): Track[] {
     return this.db.findAll();
@@ -76,14 +76,14 @@ export class TrackService {
     }
 
     return trackToDelete || null;
-  } 
+  }
 
   removeIds(id: string, updateTrackDto: UpdateTrackDto) {
     const tracks = this.db.findAll();
     let count = 0;
 
     tracks.forEach((track) => {
-      if ((id === track.artistId) || (id === track.albumId)) {
+      if (id === track.artistId || id === track.albumId) {
         this.db.update(track.id, updateTrackDto);
         count++;
       }

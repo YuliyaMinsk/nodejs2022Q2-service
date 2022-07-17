@@ -5,7 +5,7 @@ import { TrackModule } from './tracks/track.module';
 import { UserModule } from './users/user.module';
 
 @Module({
-  imports: [UserModule, ArtistModule, AlbumModule, TrackModule,],
+  imports: [UserModule, ArtistModule, AlbumModule, TrackModule],
   controllers: [],
   providers: [],
   exports: [],

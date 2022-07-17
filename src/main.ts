@@ -17,6 +17,5 @@ async function bootstrap() {
       📭  Start work at http://localhost:${port}/user
     `);
   });
-
 }
 bootstrap();

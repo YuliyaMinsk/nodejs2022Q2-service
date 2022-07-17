@@ -11,11 +11,11 @@ export class CreateTrackDto {
   @IsNotEmpty()
   name: string;
 
-  @ValidateIf(track => track.artistId !== null)
+  @ValidateIf((track) => track.artistId !== null)
   @IsUUID('4')
   artistId: string;
 
-  @ValidateIf(track => track.albumId !== null)
+  @ValidateIf((track) => track.albumId !== null)
   @IsUUID('4')
   albumId: string;
 

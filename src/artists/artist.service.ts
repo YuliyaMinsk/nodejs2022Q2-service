@@ -21,7 +21,7 @@ export class ArtistService {
     private albumService: AlbumService,
     @Inject(forwardRef(() => TrackService))
     private trackService: TrackService,
-    ) {}
+  ) {}
 
   findAll(): Artist[] {
     return this.db.findAll();
@@ -86,5 +86,5 @@ export class ArtistService {
     this.trackService.removeIds(id, { artistId: null });
 
     return artistToDelete || null;
-  } 
+  }
 }

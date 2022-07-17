@@ -18,7 +18,7 @@ export class AlbumService {
     private db: DatabaseService<Album>,
     @Inject(forwardRef(() => TrackService))
     private trackService: TrackService,
-    ) {}
+  ) {}
 
   findAll(): Album[] {
     return this.db.findAll();

@@ -15,7 +15,7 @@ import { UpdateAlbumDto } from './dto/update-album.dto';
 
 @Controller('album')
 export class AlbumController {
- constructor(private albumService: AlbumService) {}
+  constructor(private albumService: AlbumService) {}
 
   @Get()
   findAll() {
@@ -33,8 +33,8 @@ export class AlbumController {
   }
 
   @Put(':id')
-  updateAlbum(@Param('id') id: string, @Body() UpdateAlbumDto: UpdateAlbumDto) {
-    return this.albumService.update(id, UpdateAlbumDto);
+  updateAlbum(@Param('id') id: string, @Body() updateAlbumDto: UpdateAlbumDto) {
+    return this.albumService.update(id, updateAlbumDto);
   }
 
   @Delete(':id')
