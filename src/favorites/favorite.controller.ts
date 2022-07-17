@@ -9,10 +9,10 @@ import {
   Put,
 } from '@nestjs/common';
 import { CreateFavoriteDto } from './dto/create-favorite.dto';
-//import { FavoriteService } from './favorite.service';
-import Favorite from './favorite.entity';
 import { UpdateFavoriteDto } from './dto/update-favorite.dto';
-/*
+import { FavoriteService } from './favorite.service';
+import Favorites from './favorite.entity';
+
 @Controller('favorite')
 export class FavoriteController {
   constructor(private favoriteService: FavoriteService) {}
@@ -23,19 +23,20 @@ export class FavoriteController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): Favorite {
-    return this.favoriteService.findOne(id);
+  findOne(@Param('id') id: string) {
+    //return this.favoriteService.findOne(id);
   }
 
-  @Post()
-  create(@Body() createFavoriteDto: CreateFavoriteDto) {
-    return this.favoriteService.create(createFavoriteDto);
+  @Put()
+  addAlbum(@Body() createFavoriteDto: CreateFavoriteDto) {
+    //return this.favoriteService.add(createFavoriteDto);
   }
 
-  @Put(':id')
-  updateFavorite(@Param('id') id: string, @Body() UpdateFavoriteDto: UpdateFavoriteDto) {
-    return this.favoriteService.updateFavorite(id, UpdateFavoriteDto);
+  @Put()
+  removeAlbum(@Body() createFavoriteDto: CreateFavoriteDto) {
+    //return this.favoriteService.remove(createFavoriteDto);
   }
+
 
   @Delete(':id')
   @HttpCode(204)
@@ -43,4 +44,3 @@ export class FavoriteController {
     return this.favoriteService.delete(id);
   }
 }
-*/
