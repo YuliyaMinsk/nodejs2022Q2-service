@@ -25,7 +25,7 @@ async function bootstrap() {
     console.log(`
       🚀  Server is running!
       🔉  Listening on port ${port}
-      📭  Start work at http://localhost:${port}/user
+      📭  Start work at http://localhost:${port}/doc
     `);
   });
 }
