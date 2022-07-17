@@ -12,8 +12,6 @@ import { UpdateTrackDto } from './dto/update-track.dto';
 
 @Injectable()
 export class TrackService {
-  private readonly tracks: Track[];
-
   constructor(private db: DatabaseService<Track>,) {}
 
   findAll(): Track[] {
@@ -48,14 +46,14 @@ export class TrackService {
     return newTrack;
   }
 
-  update(id: string, UpdateTrackDto: UpdateTrackDto) {
+  update(id: string, updateTrackDto: UpdateTrackDto) {
     const trackToUpdate = this.findOne(id);
 
     if (!trackToUpdate) {
       throw new NotFoundException();
     }
 
-    const { name, artistId, albumId, duration } = UpdateTrackDto;
+    const { name, artistId, albumId, duration } = updateTrackDto;
 
     Object.assign(trackToUpdate, {
       name: name,
@@ -80,4 +78,17 @@ export class TrackService {
 
     return trackToDelete || null;
   } 
+
+  removeIds(id: string, updateTrackDto: UpdateTrackDto) {
+    const tracks = this.db.findAll();
+    const result = [];
+
+    tracks.forEach((track) => {
+      if ((id === track.artistId) || (id === track.albumId)) {
+        result.push(this.db.update(track.id, updateTrackDto));
+      }
+    });
+
+    return result;
+  }
 }

@@ -5,8 +5,8 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { v4, validate } from 'uuid';
-import { CreateUserDto } from './dto/create-user.dto';
 import User from './user.entity';
+import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import DatabaseService from 'src/db/in-memory.db.service';
 

@@ -1,5 +1,7 @@
 import {
   BadRequestException,
+  forwardRef,
+  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -8,12 +10,18 @@ import Artist from './artist.entity';
 import DatabaseService from 'src/db/in-memory.db.service';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
+import { AlbumService } from 'src/albums/album.service';
+import { TrackService } from 'src/tracks/track.service';
 
 @Injectable()
 export class ArtistService {
-  private readonly artists: Artist[];
-
-  constructor(private db: DatabaseService<Artist>,) {}
+  constructor(
+    private db: DatabaseService<Artist>,
+    @Inject(forwardRef(() => AlbumService))
+    private albumService: AlbumService,
+    @Inject(forwardRef(() => TrackService))
+    private trackService: TrackService,
+    ) {}
 
   findAll(): Artist[] {
     return this.db.findAll();
@@ -45,14 +53,14 @@ export class ArtistService {
     return newArtist;
   }
 
-  update(id: string, UpdateArtistDto: UpdateArtistDto) {
+  update(id: string, updateArtistDto: UpdateArtistDto) {
     const artistToUpdate = this.findOne(id);
 
     if (!artistToUpdate) {
       throw new NotFoundException();
     }
 
-    const { name, grammy } = UpdateArtistDto;
+    const { name, grammy } = updateArtistDto;
 
     Object.assign(artistToUpdate, {
       name: name,
@@ -74,7 +82,8 @@ export class ArtistService {
     }
 
     // change id to null in albums and tracks
-    // inMemoryDB.deleteArtist(id);
+    this.albumService.removeIds(id, { artistId: null });
+    this.trackService.removeIds(id, { artistId: null });
 
     return artistToDelete || null;
   } 

@@ -1,6 +1,8 @@
 import {
   BadRequestException,
   ForbiddenException,
+  forwardRef,
+  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -9,12 +11,15 @@ import { CreateAlbumDto } from './dto/create-album.dto';
 import Album from './album.entity';
 import DatabaseService from 'src/db/in-memory.db.service';
 import { UpdateAlbumDto } from './dto/update-album.dto';
+import { TrackService } from 'src/tracks/track.service';
 
 @Injectable()
 export class AlbumService {
-  private readonly albums: Album[];
-
-  constructor(private db: DatabaseService<Album>,) {}
+  constructor(
+    private db: DatabaseService<Album>,
+    @Inject(forwardRef(() => TrackService))
+    private trackService: TrackService,
+    ) {}
 
   findAll(): Album[] {
     return this.db.findAll();
@@ -47,14 +52,14 @@ export class AlbumService {
     return newAlbum;
   }
 
-  update(id: string, UpdateAlbumDto: UpdateAlbumDto) {
+  update(id: string, updateAlbumDto: UpdateAlbumDto) {
     const albumToUpdate = this.findOne(id);
 
     if (!albumToUpdate) {
       throw new NotFoundException();
     }
 
-    const { name, year, artistId } = UpdateAlbumDto;
+    const { name, year, artistId } = updateAlbumDto;
 
     Object.assign(albumToUpdate, {
       name: name,
@@ -76,6 +81,21 @@ export class AlbumService {
       throw new NotFoundException();
     }
 
+    this.trackService.removeIds(id, { albumId: null });
+
     return albumToDelete || null;
+  }
+
+  removeIds(id: string, updateAlbumDto: UpdateAlbumDto) {
+    const albums = this.db.findAll();
+    const result = [];
+
+    albums.forEach((album) => {
+      if (id === album.artistId) {
+        result.push(this.db.update(album.id, updateAlbumDto));
+      }
+    });
+
+    return result;
   }
 }
