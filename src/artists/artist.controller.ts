@@ -1,4 +1,13 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { ArtistService } from './artist.service';
 import Artist from './artist.entity';
@@ -24,7 +33,10 @@ export class ArtistController {
   }
 
   @Put(':id')
-  updatePassword(@Param('id') id: string, @Body() UpdatePasswordDto: UpdateArtistDto) {
+  updatePassword(
+    @Param('id') id: string,
+    @Body() UpdatePasswordDto: UpdateArtistDto,
+  ) {
     return this.artistService.update(id, UpdatePasswordDto);
   }
 

@@ -1,4 +1,9 @@
-import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { v4, validate } from 'uuid';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import inMemoryDB from 'src/in-memory.db';
@@ -10,15 +15,15 @@ export class AlbumService {
   private readonly albums: Album[];
 
   constructor() {
-    this.albums = inMemoryDB.albums;
-  }    
+    this.albums = inMemoryDB.getInstance().albums;
+  }
 
   findAll(): Album[] {
     return this.albums;
   }
 
   findOne(id: string): Album {
-    const album = this.albums.find((album) => album.id === id)
+    const album = this.albums.find((album) => album.id === id);
 
     if (!validate(id)) {
       throw new BadRequestException();
@@ -32,7 +37,6 @@ export class AlbumService {
   }
 
   create(createAlbumDto: CreateAlbumDto) {
-
     const newAlbum = new Album();
 
     newAlbum.id = v4();
@@ -53,7 +57,7 @@ export class AlbumService {
     }
 
     const { name, year, artistId } = UpdateAlbumDto;
-    
+
     Object.assign(albumToUpdate, {
       name: name,
       year: year,

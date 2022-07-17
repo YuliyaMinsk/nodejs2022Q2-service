@@ -1,6 +1,11 @@
-import { IsInt, IsNotEmpty, IsString, IsUUID, ValidateIf } from 'class-validator';
+import {
+  IsInt,
+  IsNotEmpty,
+  IsString,
+  IsUUID,
+  ValidateIf,
+} from 'class-validator';
 import { isNull } from 'node:util';
-
 
 export class CreateAlbumDto {
   @IsString()

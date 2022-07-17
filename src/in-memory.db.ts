@@ -6,14 +6,22 @@ import Track from './tracks/track.entity';
 import User from './users/user.entity';
 
 @Injectable()
-class Database {
+class InMemoryDB {
   users: User[] = [];
   artists: Artist[] = [];
   tracks: Track[] = [];
   albums: Album[] = [];
   favorites: Favorites[] = [];
+
+  private static instance: InMemoryDB;
+
+  public static getInstance(): InMemoryDB {
+    if (!InMemoryDB.instance) {
+      InMemoryDB.instance = new InMemoryDB();
+    }
+
+    return InMemoryDB.instance;
+  }
 }
 
-const inMemoryDB = new Database();
-
-export default inMemoryDB;
+export default InMemoryDB;

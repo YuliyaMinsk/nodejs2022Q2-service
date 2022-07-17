@@ -1,4 +1,4 @@
-export default class Album { 
+export default class Album {
   id: string; // uuid v4
   name: string;
   year: number;

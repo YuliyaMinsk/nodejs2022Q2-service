@@ -1,4 +1,9 @@
-import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { v4, validate } from 'uuid';
 import inMemoryDB from 'src/in-memory.db';
 import Track from './track.entity';
@@ -10,15 +15,15 @@ export class TrackService {
   private readonly tracks: Track[];
 
   constructor() {
-    this.tracks = inMemoryDB.tracks;
-  }    
+    this.tracks = inMemoryDB.getInstance().tracks;
+  }
 
   findAll(): Track[] {
     return this.tracks;
   }
 
   findOne(id: string): Track {
-    const track = this.tracks.find((track) => track.id === id)
+    const track = this.tracks.find((track) => track.id === id);
 
     if (!validate(id)) {
       throw new BadRequestException();
@@ -32,7 +37,6 @@ export class TrackService {
   }
 
   create(createTrackDto: CreateTrackDto) {
-
     const newTrack = new Track();
 
     newTrack.id = v4();
@@ -54,13 +58,12 @@ export class TrackService {
     }
 
     const { name, artistId, albumId, duration } = UpdateTrackDto;
-    
 
     Object.assign(trackToUpdate, {
       name: name,
       artistId: artistId,
       albumId: albumId,
-      duration: duration
+      duration: duration,
     });
 
     return trackToUpdate || null;

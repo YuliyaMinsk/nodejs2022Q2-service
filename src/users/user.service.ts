@@ -1,4 +1,9 @@
-import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { v4, validate } from 'uuid';
 import { CreateUserDto } from './dto/create-user.dto';
 import inMemoryDB from 'src/in-memory.db';
@@ -10,15 +15,15 @@ export class UserService {
   private readonly users: User[];
 
   constructor() {
-    this.users = inMemoryDB.users;
-  }    
+    this.users = inMemoryDB.getInstance().users;
+  }
 
   findAll(): User[] {
     return this.users;
   }
 
   findOne(id: string): User {
-    const user = this.users.find((user) => user.id === id)
+    const user = this.users.find((user) => user.id === id);
 
     if (!validate(id)) {
       throw new BadRequestException();
@@ -32,7 +37,6 @@ export class UserService {
   }
 
   create(createUserDto: CreateUserDto) {
-
     const newUser = new User();
 
     newUser.id = v4();
@@ -55,13 +59,13 @@ export class UserService {
     }
 
     const { oldPassword, newPassword } = UpdatePasswordDto;
-    
+
     if (oldPassword === newPassword) {
       throw new BadRequestException();
     }
 
     if (oldPassword !== userToUpdate.password) {
-      throw new ForbiddenException('You put wrong old password')
+      throw new ForbiddenException('You put wrong old password');
     }
 
     Object.assign(userToUpdate, {

@@ -10,7 +10,12 @@ import { UserService } from './users/user.service';
 
 @Module({
   imports: [],
-  controllers: [UserController, ArtistController, TrackController, AlbumController],
+  controllers: [
+    UserController,
+    ArtistController,
+    TrackController,
+    AlbumController,
+  ],
   providers: [UserService, ArtistService, TrackService, AlbumService],
   exports: [],
 })

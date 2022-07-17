@@ -1,24 +1,28 @@
-import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
-import inMemoryDB from "src/in-memory.db";
-import { v4, validate } from "uuid";
-import Artist from "./artist.entity";
-import { CreateArtistDto } from "./dto/create-artist.dto";
-import { UpdateArtistDto } from "./dto/update-artist.dto";
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import inMemoryDB from 'src/in-memory.db';
+import { v4, validate } from 'uuid';
+import Artist from './artist.entity';
+import { CreateArtistDto } from './dto/create-artist.dto';
+import { UpdateArtistDto } from './dto/update-artist.dto';
 
 @Injectable()
 export class ArtistService {
   private readonly artists: Artist[];
 
   constructor() {
-    this.artists = inMemoryDB.artists;
-  } 
+    this.artists = inMemoryDB.getInstance().artists;
+  }
 
   findAll(): Artist[] {
     return this.artists;
   }
 
   findOne(id: string): Artist {
-    const artist = this.artists.find((artist) => artist.id === id)
+    const artist = this.artists.find((artist) => artist.id === id);
 
     if (!validate(id)) {
       throw new BadRequestException();
@@ -32,7 +36,6 @@ export class ArtistService {
   }
 
   create(createArtistDto: CreateArtistDto) {
-
     const newArtist = new Artist();
 
     newArtist.id = v4();
