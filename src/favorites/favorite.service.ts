@@ -6,7 +6,6 @@ import {
 } from '@nestjs/common';
 import { v4, validate } from 'uuid';
 import { CreateFavoriteDto } from './dto/create-favorite.dto';
-import inMemoryDB from 'src/in-memory.db';
 import Favorite from './favorite.entity';
 import { UpdateFavoriteDto } from './dto/update-favorite.dto';
 /*

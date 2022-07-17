@@ -15,7 +15,7 @@ import { UpdateAlbumDto } from './dto/update-album.dto';
 
 @Controller('album')
 export class AlbumController {
-  constructor(private albumService: AlbumService) {}
+ constructor(private albumService: AlbumService) {}
 
   @Get()
   findAll() {

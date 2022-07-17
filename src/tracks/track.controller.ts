@@ -44,5 +44,5 @@ export class TrackController {
   @HttpCode(204)
   delete(@Param('id') id: string) {
     return this.trackService.delete(id);
-  }
+  } 
 }

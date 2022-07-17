@@ -5,18 +5,17 @@ import {
   IsUUID,
   ValidateIf,
 } from 'class-validator';
-import { isNull } from 'node:util';
 
 export class CreateTrackDto {
   @IsString()
   @IsNotEmpty()
   name: string;
 
-  @ValidateIf((_, value) => !isNull(value))
+  @ValidateIf(track => track.artistId !== null)
   @IsUUID('4')
   artistId: string;
 
-  @ValidateIf((_, value) => !isNull(value))
+  @ValidateIf(track => track.albumId !== null)
   @IsUUID('4')
   albumId: string;
 

@@ -5,8 +5,8 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { v4, validate } from 'uuid';
-import inMemoryDB from 'src/in-memory.db';
 import Track from './track.entity';
+import DatabaseService from 'src/db/in-memory.db.service';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
 
@@ -14,16 +14,14 @@ import { UpdateTrackDto } from './dto/update-track.dto';
 export class TrackService {
   private readonly tracks: Track[];
 
-  constructor() {
-    this.tracks = inMemoryDB.getInstance().tracks;
-  }
+  constructor(private db: DatabaseService<Track>,) {}
 
   findAll(): Track[] {
-    return this.tracks;
+    return this.db.findAll();
   }
 
   findOne(id: string): Track {
-    const track = this.tracks.find((track) => track.id === id);
+    const track = this.db.findOne(id);
 
     if (!validate(id)) {
       throw new BadRequestException();
@@ -45,7 +43,7 @@ export class TrackService {
     newTrack.albumId = createTrackDto.albumId;
     newTrack.duration = createTrackDto.duration;
 
-    this.tracks.push(newTrack);
+    this.db.create(newTrack);
 
     return newTrack;
   }
@@ -66,22 +64,20 @@ export class TrackService {
       duration: duration,
     });
 
-    return trackToUpdate || null;
+    return this.db.update(id, trackToUpdate);
   }
 
   delete(id: string) {
-    const trackToDelete = this.findOne(id);
+    const trackToDelete = this.db.delete(id);
+
+    if (!validate(id)) {
+      throw new BadRequestException();
+    }
 
     if (!trackToDelete) {
       throw new NotFoundException();
     }
 
-    const index = this.tracks.findIndex((track) => {
-      return track.id === trackToDelete.id;
-    });
-
-    this.tracks.splice(index, 1);
-
     return trackToDelete || null;
-  }
+  } 
 }

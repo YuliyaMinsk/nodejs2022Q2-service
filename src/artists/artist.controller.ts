@@ -44,5 +44,5 @@ export class ArtistController {
   @HttpCode(204)
   delete(@Param('id') id: string) {
     return this.artistService.delete(id);
-  }
+  } 
 }

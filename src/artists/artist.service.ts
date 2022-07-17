@@ -3,9 +3,9 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import inMemoryDB from 'src/in-memory.db';
 import { v4, validate } from 'uuid';
 import Artist from './artist.entity';
+import DatabaseService from 'src/db/in-memory.db.service';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
 
@@ -13,16 +13,14 @@ import { UpdateArtistDto } from './dto/update-artist.dto';
 export class ArtistService {
   private readonly artists: Artist[];
 
-  constructor() {
-    this.artists = inMemoryDB.getInstance().artists;
-  }
+  constructor(private db: DatabaseService<Artist>,) {}
 
   findAll(): Artist[] {
-    return this.artists;
+    return this.db.findAll();
   }
 
   findOne(id: string): Artist {
-    const artist = this.artists.find((artist) => artist.id === id);
+    const artist = this.db.findOne(id);
 
     if (!validate(id)) {
       throw new BadRequestException();
@@ -42,7 +40,7 @@ export class ArtistService {
     newArtist.name = createArtistDto.name;
     newArtist.grammy = createArtistDto.grammy;
 
-    this.artists.push(newArtist);
+    this.db.create(newArtist);
 
     return newArtist;
   }
@@ -61,22 +59,23 @@ export class ArtistService {
       grammy: grammy,
     });
 
-    return artistToUpdate || null;
+    return this.db.update(id, artistToUpdate);
   }
 
   delete(id: string) {
-    const artistToDelete = this.findOne(id);
+    const artistToDelete = this.db.delete(id);
+
+    if (!validate(id)) {
+      throw new BadRequestException();
+    }
 
     if (!artistToDelete) {
       throw new NotFoundException();
     }
 
-    const index = this.artists.findIndex((artist) => {
-      return artist.id === artistToDelete.id;
-    });
-
-    this.artists.splice(index, 1);
+    // change id to null in albums and tracks
+    // inMemoryDB.deleteArtist(id);
 
     return artistToDelete || null;
-  }
+  } 
 }

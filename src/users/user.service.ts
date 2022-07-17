@@ -6,24 +6,22 @@ import {
 } from '@nestjs/common';
 import { v4, validate } from 'uuid';
 import { CreateUserDto } from './dto/create-user.dto';
-import inMemoryDB from 'src/in-memory.db';
 import User from './user.entity';
 import { UpdatePasswordDto } from './dto/update-password.dto';
+import DatabaseService from 'src/db/in-memory.db.service';
 
 @Injectable()
 export class UserService {
   private readonly users: User[];
 
-  constructor() {
-    this.users = inMemoryDB.getInstance().users;
-  }
+  constructor(private db: DatabaseService<User>,) {}
 
   findAll(): User[] {
-    return this.users;
+    return this.db.findAll();
   }
 
   findOne(id: string): User {
-    const user = this.users.find((user) => user.id === id);
+    const user = this.db.findOne(id);
 
     if (!validate(id)) {
       throw new BadRequestException();
@@ -46,7 +44,7 @@ export class UserService {
     newUser.createdAt = Date.now();
     newUser.updatedAt = Date.now();
 
-    this.users.push(newUser);
+    this.db.create(newUser);
 
     return newUser;
   }
@@ -74,22 +72,20 @@ export class UserService {
       updatedAt: Date.now(),
     });
 
-    return userToUpdate || null;
+    return this.db.update(id, userToUpdate);
   }
 
   delete(id: string) {
-    const userToDelete = this.findOne(id);
+    const userToDelete = this.db.delete(id);
+
+    if (!validate(id)) {
+      throw new BadRequestException();
+    }
 
     if (!userToDelete) {
       throw new NotFoundException();
     }
 
-    const index = this.users.findIndex((user) => {
-      return user.id === userToDelete.id;
-    });
-
-    this.users.splice(index, 1);
-
-    return userToDelete || null;
+    return userToDelete;
   }
 }
