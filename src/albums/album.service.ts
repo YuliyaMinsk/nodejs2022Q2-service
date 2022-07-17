@@ -1,6 +1,5 @@
 import {
   BadRequestException,
-  ForbiddenException,
   forwardRef,
   Inject,
   Injectable,
@@ -88,14 +87,15 @@ export class AlbumService {
 
   removeIds(id: string, updateAlbumDto: UpdateAlbumDto) {
     const albums = this.db.findAll();
-    const result = [];
+    let count = 0;
 
     albums.forEach((album) => {
       if (id === album.artistId) {
-        result.push(this.db.update(album.id, updateAlbumDto));
+        this.db.update(album.id, updateAlbumDto);
+        count++;
       }
     });
 
-    return result;
+    return count;
   }
 }

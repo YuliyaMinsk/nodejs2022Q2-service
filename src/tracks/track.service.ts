@@ -1,6 +1,5 @@
 import {
   BadRequestException,
-  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -81,14 +80,15 @@ export class TrackService {
 
   removeIds(id: string, updateTrackDto: UpdateTrackDto) {
     const tracks = this.db.findAll();
-    const result = [];
+    let count = 0;
 
     tracks.forEach((track) => {
       if ((id === track.artistId) || (id === track.albumId)) {
-        result.push(this.db.update(track.id, updateTrackDto));
+        this.db.update(track.id, updateTrackDto);
+        count++;
       }
     });
 
-    return result;
+    return count;
   }
 }
