@@ -13,8 +13,11 @@ services:
       - "${PORT}:${PORT}"
     depends_on:
       - database
+    networks:
+      - database
 
   database:
+    container_name: rest-database-service-container
     build:
       context: .
       dockerfile: ./docker/database/Dockerfile
@@ -27,7 +30,14 @@ services:
       - "${DB_PORT}:${DB_PORT}"
     volumes:
       - rest-service-volume:/var/lib/postgresql/data
+    networks:
+      - database
 
 volumes:
   rest-service-volume:
     name: rest-service-volume
+
+networks:
+  database:
+    name: rest-postgres_network
+    driver: bridge
