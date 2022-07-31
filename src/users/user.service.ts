@@ -8,20 +8,18 @@ import { v4, validate } from 'uuid';
 import User from './user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
-import DatabaseService from 'src/db/in-memory.db.service';
+import { PrismaDBService } from 'src/prisma-db/prisma-db.service'
 
 @Injectable()
 export class UserService {
-  private readonly users: User[];
+  constructor(private prisma: PrismaDBService) {}
 
-  constructor(private db: DatabaseService<User>) {}
-
-  findAll(): User[] {
-    return this.db.findAll();
+  async findAll() {
+    return this.prisma.user.findMany();
   }
 
-  findOne(id: string): User {
-    const user = this.db.findOne(id);
+  async findOne(id: string) {
+    const user = await this.prisma.user.findUnique({ where: { id } });
 
     if (!validate(id)) {
       throw new BadRequestException();
@@ -44,13 +42,14 @@ export class UserService {
     newUser.createdAt = Date.now();
     newUser.updatedAt = Date.now();
 
-    this.db.create(newUser);
+    this.prisma.user.create({ data: newUser });
 
     return newUser;
   }
 
-  updatePassword(id: string, updatePasswordDto: UpdatePasswordDto) {
-    const userToUpdate = this.findOne(id);
+  async updatePassword(id: string, updatePasswordDto: UpdatePasswordDto) {
+
+    const userToUpdate = await this.prisma.user.findUnique({ where: { id } });
 
     if (!userToUpdate) {
       throw new NotFoundException();
@@ -72,11 +71,16 @@ export class UserService {
       updatedAt: Date.now(),
     });
 
-    return this.db.update(id, userToUpdate);
+    await this.prisma.user.updateMany ({
+      where: { id },
+      data: userToUpdate,
+    });
+
+    return userToUpdate;
   }
 
-  delete(id: string) {
-    const userToDelete = this.db.delete(id);
+  async delete(id: string) {
+    const userToDelete = await this.prisma.user.findUnique({ where: { id } });
 
     if (!validate(id)) {
       throw new BadRequestException();
@@ -85,6 +89,8 @@ export class UserService {
     if (!userToDelete) {
       throw new NotFoundException();
     }
+
+    await this.prisma.user.delete({ where: { id } });
 
     return userToDelete;
   }
