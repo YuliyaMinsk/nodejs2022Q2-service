@@ -19,7 +19,10 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "kill": "kill-port --port 4000"
+    "kill": "kill-port --port 4000",
+    "docker": "docker compose up -d --build",
+    "docker:scan:app": "docker scan rest-service-image",
+    "docker:scan:db": "docker scan nodejs2022q2-service_database"
   },
   "dependencies": {
     "@nestjs/common": "^8.0.0",

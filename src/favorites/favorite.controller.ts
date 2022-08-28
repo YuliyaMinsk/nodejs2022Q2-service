@@ -1,17 +1,5 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  HttpCode,
-  Param,
-  Post,
-  Put,
-} from '@nestjs/common';
-import { CreateFavoriteDto } from './dto/create-favorite.dto';
-import { UpdateFavoriteDto } from './dto/update-favorite.dto';
+import { Controller, Delete, Get, HttpCode, Param, Post } from '@nestjs/common';
 import { FavoriteService } from './favorite.service';
-import Favorites from './favorite.entity';
 
 @Controller('favs')
 export class FavoriteController {
@@ -24,13 +12,37 @@ export class FavoriteController {
 
   @Post('album/:id')
   @HttpCode(201)
-  addAlbum(@Param('id') id: string) {
-    return this.favoriteService.addAlbum(id);
+  async addAlbum(@Param('id') id: string) {
+    return await this.favoriteService.addAlbum(id);
   }
 
   @Delete('album/:id')
   @HttpCode(204)
   removeAlbum(@Param('id') id: string) {
     return this.favoriteService.removeAlbum(id);
+  }
+
+  @Post('track/:id')
+  @HttpCode(201)
+  async addTrack(@Param('id') id: string) {
+    return await this.favoriteService.addTrack(id);
+  }
+
+  @Delete('track/:id')
+  @HttpCode(204)
+  removeTrack(@Param('id') id: string) {
+    return this.favoriteService.removeTrack(id);
+  }
+
+  @Post('artist/:id')
+  @HttpCode(201)
+  async addArtist(@Param('id') id: string) {
+    return await this.favoriteService.addArtist(id);
+  }
+
+  @Delete('artist/:id')
+  @HttpCode(204)
+  removeArtist(@Param('id') id: string) {
+    return this.favoriteService.removeArtist(id);
   }
 }
